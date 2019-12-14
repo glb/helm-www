@@ -30,6 +30,7 @@ wordpress/
   README.md           # OPTIONAL: A human-readable README file
   values.yaml         # The default configuration values for this chart
   values.schema.json  # OPTIONAL: A JSON Schema for imposing a structure on the values.yaml file
+  values.schema.yaml  # OPTIONAL: A JSON Schema for imposing a structure on the values.yaml file
   charts/             # A directory containing any charts upon which this chart depends.
   crds/               # Custom Resource Definitions
   templates/          # A directory of templates that, when combined with values,
@@ -816,8 +817,10 @@ variables from subcharts.
 ### Schema Files
 
 Sometimes, a chart maintainer might want to define a structure on their values.
-This can be done by defining a schema in the `values.schema.json` file. A schema
-is represented as a [JSON Schema](https://json-schema.org/). It might look
+This can be done by defining a schema in a `values.schema.json` file or a
+`values.schema.yaml` file.
+
+A schema is represented as a [JSON Schema](https://json-schema.org/). It might look
 something like this:
 
 ```json
@@ -856,6 +859,35 @@ something like this:
   "title": "Values",
   "type": "object"
 }
+```
+
+or this:
+
+```yaml
+$schema: "https://json-schema.org/draft-07/schema#"
+properties:
+  image:
+    description: "Container Image"
+    properties:
+      repo:
+        type: string
+      tag:
+        type: string
+    type: object
+  name:
+    description: "Service name"
+    type: string
+  port:
+    description: Port
+    minimum: 0
+    type: integer
+  protocol:
+    type: string
+required:
+  - protocol
+  - port
+title: Values
+type: object
 ```
 
 This schema will be applied to the values to validate it. Validation occurs when
